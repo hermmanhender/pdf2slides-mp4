@@ -1,48 +1,17 @@
-import os
-from pptx import Presentation
-import PyPDF2
+"""
+_summary_
 
-def extract_text_from_pdf(file_path):
-    """Extrae el texto del archivo PDF y lo devuelve como una cadena."""
-    with open(file_path, 'rb') as file:
-        reader = PyPDF2.PdfFileReader(file)
-        text = ''
-        for page in reader.pages:
-            text += page.extract_text()
-        return text
-
-def create_presentation_from_text(text):
-    """Crea una presentación en PowerPoint a partir del texto proporcionado."""
-    presentation = Presentation()
-    slides = text.split('\n\n')  # Divide el texto en diapositivas basadas en párrafos separados
-    for slide_content in slides:
-        slide = presentation.slides.add_slide(presentation.slide_layouts[1])
-        title = slide.shapes.title
-        content = slide.placeholders[1]
-        title.text = slide_content.split('\n')[0]  # Toma la primera línea del párrafo como título de la diapositiva
-        content.text = slide_content  # El párrafo completo se agrega como contenido de la diapositiva
-    return presentation
-
-def save_presentation(presentation, output_path):
-    """Guarda la presentación en el archivo especificado."""
-    presentation.save(output_path)
-
-def convert_pdf_to_presentation(pdf_file, output_file):
-    """Convierte un archivo PDF en una presentación en PowerPoint."""
-    text = extract_text_from_pdf(pdf_file)
-    presentation = create_presentation_from_text(text)
-    save_presentation(presentation, output_file)
-
-# Ejemplo de uso:
-pdf_file_path = 'ruta/al/archivo.pdf'
-output_file_path = 'ruta/de/salida.pptx'
-convert_pdf_to_presentation(pdf_file_path, output_file_path)
-print("Presentación generada con éxito en", output_file_path)
-
+Returns:
+    _type_: _description_
+"""
 import os
 from pptx import Presentation
 import PyPDF2
 import openai
+from ppt2pdf import convert
+from moviepy.editor import *
+from gtts import gTTS
+from pydub import AudioSegment
 
 openai.api_key = 'TU_CLAVE_DE_API_DE_OPENAI'  # Reemplaza con tu clave de API de OpenAI
 
@@ -108,18 +77,6 @@ def convert_pdf_to_presentation(pdf_file, output_file):
     presentation = create_presentation_from_structure(structure)
     save_presentation(presentation, output_file)
 
-# Ejemplo de uso:
-pdf_file_path = 'ruta/al/archivo.pdf'
-output_file_path = 'ruta/de/salida.pptx'
-convert_pdf_to_presentation(pdf_file_path, output_file_path)
-print("Presentación generada con éxito en", output_file_path)
-
-
-from ppt2pdf import convert
-from moviepy.editor import *
-from gtts import gTTS
-from pydub import AudioSegment
-
 def convert_text_to_audio(text, output_file):
     """Convierte el texto en audio y lo guarda en el archivo especificado."""
     tts = gTTS(text=text, lang='es')
@@ -155,6 +112,14 @@ def convert_presentation_to_video(presentation_file, audio_files, output_file):
 
     # Guarda el video en el formato deseado
     video_clip.write_videofile(output_file, codec='libx264', audio_codec='aac')
+
+
+# Ejemplo de uso:
+pdf_file_path = 'ruta/al/archivo.pdf'
+output_file_path = 'ruta/de/salida.pptx'
+convert_pdf_to_presentation(pdf_file_path, output_file_path)
+print("Presentación generada con éxito en", output_file_path)
+
 
 # Ejemplo de uso:
 presentation_file = 'ruta/de/la/presentacion.pptx'
