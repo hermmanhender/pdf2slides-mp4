@@ -115,7 +115,7 @@ convert_pdf_to_presentation(pdf_file_path, output_file_path)
 print("Presentación generada con éxito en", output_file_path)
 
 
-from pptx2pdf import convert
+from ppt2pdf import convert
 from moviepy.editor import *
 from gtts import gTTS
 from pydub import AudioSegment
